@@ -61,13 +61,13 @@ module.exports = function Email(sails) {
      */
     defaults: {
       __configKey__: {
-        service: 'Gmail',
+        //service: 'Gmail',
         auth: {
-          user: 'myemailaddress@gmail.com',
-          pass: 'mypassword'
+        //user: 'myemailaddress@gmail.com',
+        //  pass: 'mypassword'
         },
         templateDir: path.resolve(sails.config.appPath, 'views/emailTemplates'),
-        from: 'noreply@hydra.com',
+        from: 'noreply@example.com',
         testMode: true
       }
     },
@@ -117,7 +117,7 @@ module.exports = function Email(sails) {
             // If custom transporter is set, use that first
             if (sails.config[self.configKey].transporter.toLowerCase() === 'mailgun') {
               var mg = require('nodemailer-mailgun-transport');
-              transport = nodemailer.createTransport(mg(sails.config[self.configKey].auth));
+              transport = nodemailer.createTransport(mg({auth: sails.config[self.configKey].auth}));
             } else {
               transport = nodemailer.createTransport(sails.config[self.configKey].transporter);
             }
