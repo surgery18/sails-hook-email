@@ -52,7 +52,7 @@ module.exports.email = {
 ```javascript
 // [your-sails-app]/config/email.js
 module.exports.email = {
-  service: 'mailgun',
+  transporter: 'mailgun',
   auth: {
     api_key: 'YOUR_API_KEY',
     domain: 'A domain that is listed on your mailgun account.'
