@@ -8,7 +8,7 @@ Email hook for [Sails JS](http://sailsjs.org), using [Nodemailer](https://github
 
 ### Installation
 
-`npm install sails-hook-email`
+`npm i --save https://github.com/surgery18/sails-hook-email`
 
 ### Usage
 
