@@ -7,7 +7,7 @@ var htmlToText = require('nodemailer-html-to-text').htmlToText;
 var ejs = require('ejs');
 var fs = require('fs');
 var path = require('path');
-var async = require('async-promise');
+var async = require('promise-async');
 var _ = require('lodash');
 var inlineCss = require('inline-css');
 
@@ -204,9 +204,9 @@ module.exports = function Email(sails) {
           }]
 
         }).then(function(result) {
-          return (cb ? cb(null, result) : resolve(result));
+          return (cb != null ? cb(null, result) : resolve(result));
         }).catch(function(error){
-          return (cb ? cb(error) : reject(error));
+          return (cb != null ? cb(error) : reject(error));
         });
       });
     }

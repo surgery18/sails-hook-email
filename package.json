@@ -31,14 +31,14 @@
     "isHook": true
   },
   "dependencies": {
-    "async-promise": "^0.1.1",
     "ejs": "^2.3.1",
     "inline-css": "^2.2.2",
     "lodash": "4.17.4",
     "nodemailer": "^4.0.1",
     "nodemailer-html-to-text": "^2.1.0",
     "nodemailer-mailgun-transport": "^1.3.5",
-    "nodemailer-smtp-pool": "^2.8.3"
+    "nodemailer-smtp-pool": "^2.8.3",
+    "promise-async": "^0.2.0"
   },
   "repository": {
     "type": "git",
