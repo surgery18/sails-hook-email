@@ -28,7 +28,8 @@
   ],
   "license": "MIT",
   "sails": {
-    "isHook": true
+    "isHook": true,
+    "hookName": "email"
   },
   "dependencies": {
     "ejs": "^2.3.1",
