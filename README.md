@@ -6,6 +6,7 @@ Email hook for [Sails JS](http://sailsjs.org), using [Nodemailer](https://github
 
 *Note: This requires Sails v0.10.6+.*
 
+
 ### Installation
 
 `npm i --save sails-hook-email-promise`
@@ -77,7 +78,7 @@ Given the following **html.ejs** file contained in the folder **views/emailTempl
 <p>Love,<br/><%=senderName%></p>
 ```
 
-executing the following command (after [configuring for your email service](https://github.com/balderdashy/sails-hook-email/#configuration) and turning off test mode) :
+executing the following command (after [configuring for your email service](https://github.com/surgery18/sails-hook-email/#configuration) and turning off test mode) :
 
 ```javascript
 sails.hooks.email.send(
