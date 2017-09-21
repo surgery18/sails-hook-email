@@ -204,9 +204,9 @@ module.exports = function Email(sails) {
           }]
 
         }).then(function(result) {
-          return (cb ? cb(null, res) : resolve(res));
+          return (cb ? cb(null, result) : resolve(result));
         }).catch(function(error){
-          return (cb ? cb(error) : reject(res));
+          return (cb ? cb(error) : reject(error));
         });
       });
     }
