@@ -7,7 +7,7 @@ var htmlToText = require('nodemailer-html-to-text').htmlToText;
 var ejs = require('ejs');
 var fs = require('fs');
 var path = require('path');
-var async = require('async');
+var async = require('async-promise');
 var _ = require('lodash');
 var inlineCss = require('inline-css');
 
@@ -61,10 +61,7 @@ module.exports = function Email(sails) {
      */
     defaults: {
       __configKey__: {
-        //service: 'Gmail',
         auth: {
-        //user: 'myemailaddress@gmail.com',
-        //  pass: 'mypassword'
         },
         templateDir: path.resolve(sails.config.appPath, 'views/emailTemplates'),
         from: 'noreply@example.com',
@@ -150,69 +147,68 @@ module.exports = function Email(sails) {
      */
 
     send: function (template, data, options, cb) {
+      return new Promise(function(resolve, reject) {
+        data = data || {};
+        // Turn off layouts by default
+        if (typeof data.layout === 'undefined') data.layout = false;
 
-      data = data || {};
-      // Turn off layouts by default
-      if (typeof data.layout === 'undefined') data.layout = false;
+        var templateDir = sails.config[self.configKey].templateDir;
+        var templatePath = path.join(templateDir, template);
 
-      var templateDir = sails.config[self.configKey].templateDir;
-      var templatePath = path.join(templateDir, template);
+        // Set some default options
+        var defaultOptions = {
+          from: sails.config[self.configKey].from
+        };
 
-      // Set some default options
-      var defaultOptions = {
-        from: sails.config[self.configKey].from
-      };
+        sails.log.verbose('EMAILING:', options);
 
-      sails.log.verbose('EMAILING:', options);
+        async.auto({
 
-      async.auto({
-
-        // Grab the HTML version of the email template
-        compileHtmlTemplate: function (next) {
-          compileTemplate(templatePath + "/html", data, function (err, html) {
-            if (err) next(err);
-            // make CSS inline
-            inlineCss(html, { url: ' ' }).then(function (inlineHtml) {
-              next(null, inlineHtml);
+          // Grab the HTML version of the email template
+          compileHtmlTemplate: function (next) {
+            compileTemplate(templatePath + "/html", data, function (err, html) {
+              if (err) next(err);
+              // make CSS inline
+              inlineCss(html, { url: ' ' }).then(function (inlineHtml) {
+                next(null, inlineHtml);
+              });
             });
-          });
-        },
+          },
 
-        // Grab the Text version of the email template
-        compileTextTemplate: function (next) {
-          compileTemplate(templatePath + "/text", data, function (err, html) {
-            // Don't exit out if there is an error, we can generate plaintext
-            // from the HTML version of the template.
-            if (err) return next();
-            next(null, html);
-          });
-        },
+          // Grab the Text version of the email template
+          compileTextTemplate: function (next) {
+            compileTemplate(templatePath + "/text", data, function (err, html) {
+              // Don't exit out if there is an error, we can generate plaintext
+              // from the HTML version of the template.
+              if (err) return next();
+              next(null, html);
+            });
+          },
 
-        // Send the email
-        sendEmail: ['compileHtmlTemplate', 'compileTextTemplate', function (results, next) {
+          // Send the email
+          sendEmail: ['compileHtmlTemplate', 'compileTextTemplate', function (results, next) {
 
-          defaultOptions.html = results.compileHtmlTemplate;
-          if (results.compileTextTemplate) defaultOptions.text = results.compileTextTemplate;
+            defaultOptions.html = results.compileHtmlTemplate;
+            if (results.compileTextTemplate) defaultOptions.text = results.compileTextTemplate;
 
-          // `options`, e.g.
-          // {
-          //   to: 'somebody@example.com',
-          //   from: 'other@example.com',
-          //   subject: 'Hello World'
-          // }
-          var mailOptions = _.defaults(options, defaultOptions);
-          mailOptions.to = sails.config[self.configKey].alwaysSendTo || mailOptions.to;
+            // `options`, e.g.
+            // {
+            //   to: 'somebody@example.com',
+            //   from: 'other@example.com',
+            //   subject: 'Hello World'
+            // }
+            var mailOptions = _.defaults(options, defaultOptions);
+            mailOptions.to = sails.config[self.configKey].alwaysSendTo || mailOptions.to;
 
-          transport.sendMail(mailOptions, next);
-        }]
+            transport.sendMail(mailOptions, next);
+          }]
 
-      },
-
-        // ASYNC callback
-        function (err, results) {
-          if (err) return cb(err);
-          cb(null, results.sendEmail);
+        }).then(function(result) {
+          return (cb ? cb(null, res) : resolve(res));
+        }).catch(function(error){
+          return (cb ? cb(error) : reject(res));
         });
+      });
     }
 
   };

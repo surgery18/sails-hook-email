@@ -1,15 +1,18 @@
 {
-  "name": "sails-hook-email",
-  "version": "0.12.1",
-  "description": "Email hook for Sails",
+  "name": "sails-hook-email-promise",
+  "version": "0.0.1",
+  "description": "Email hook for Sails revised with promise and mailgun",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
-    "name": "Balderdash"
+    "name": "Scott Deutsch"
   },
   "contributors": [
+    {
+      "name": "Balderdas"
+    },
     {
       "name": "Cody Stoltman"
     },
@@ -28,7 +31,7 @@
     "isHook": true
   },
   "dependencies": {
-    "async": "2.5.0",
+    "async-promise": "^0.1.1",
     "ejs": "^2.3.1",
     "inline-css": "^2.2.2",
     "lodash": "4.17.4",
@@ -39,6 +42,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/balderdashy/sails-hook-email.git"
+    "url": "git://github.com/surgery18/sails-hook-email.git"
   }
 }

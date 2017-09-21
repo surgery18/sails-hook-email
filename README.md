@@ -8,7 +8,7 @@ Email hook for [Sails JS](http://sailsjs.org), using [Nodemailer](https://github
 
 ### Installation
 
-`npm i --save https://github.com/surgery18/sails-hook-email`
+`npm i --save sails-hook-email-promise`
 
 ### Usage
 
@@ -79,7 +79,7 @@ Given the following **html.ejs** file contained in the folder **views/emailTempl
 
 executing the following command (after [configuring for your email service](https://github.com/balderdashy/sails-hook-email/#configuration) and turning off test mode) :
 
-```
+```javascript
 sails.hooks.email.send(
   "testEmail",
   {
@@ -91,7 +91,26 @@ sails.hooks.email.send(
     subject: "Hi there"
   },
   function(err) {console.log(err || "It worked!");}
-)
+);
+```
+
+or
+
+```javascript
+sails.hooks.email.send(
+  "testEmail",
+  {
+    recipientName: "Joe",
+    senderName: "Sue"
+  },
+  {
+    to: "joe@example.com",
+    subject: "Hi there"
+  }).then(function(result) {
+    console.log(result);
+  }).catch(function(error) {
+    console.log(error);
+  });
 ```
 
 will result in the following email being sent to `joe@example.com`
