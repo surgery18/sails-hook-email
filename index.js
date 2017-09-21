@@ -7,7 +7,7 @@ var htmlToText = require('nodemailer-html-to-text').htmlToText;
 var ejs = require('ejs');
 var fs = require('fs');
 var path = require('path');
-var async = require('promise-async');
+var async = require('async');
 var _ = require('lodash');
 var inlineCss = require('inline-css');
 
@@ -114,6 +114,7 @@ module.exports = function Email(sails) {
             // If custom transporter is set, use that first
             if (sails.config[self.configKey].transporter.toLowerCase() === 'mailgun') {
               var mg = require('nodemailer-mailgun-transport');
+              console.log(sails.config[self.configKey].auth);
               transport = nodemailer.createTransport(mg({auth: sails.config[self.configKey].auth}));
             } else {
               transport = nodemailer.createTransport(sails.config[self.configKey].transporter);
@@ -203,15 +204,18 @@ module.exports = function Email(sails) {
             transport.sendMail(mailOptions, next);
           }]
 
-        }).then(function(result) {
-          if (cb) cb(null, result);
-          resolve(data);
-        }).catch(function(error) {
-          if (cb) cb(error);
-          reject(error);
-        });
+        },
+          function(error, result) {
+            if (error) {
+              if (cb) cb(error);
+              reject(data);
+            } else {
+              if (cb) cb(null, result);
+              resolve(data);
+            }
+          }
+        );
       });
     }
-
   };
 };
