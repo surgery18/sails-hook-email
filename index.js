@@ -114,7 +114,6 @@ module.exports = function Email(sails) {
             // If custom transporter is set, use that first
             if (sails.config[self.configKey].transporter.toLowerCase() === 'mailgun') {
               var mg = require('nodemailer-mailgun-transport');
-              console.log(sails.config[self.configKey].auth);
               transport = nodemailer.createTransport(mg({auth: sails.config[self.configKey].auth}));
             } else {
               transport = nodemailer.createTransport(sails.config[self.configKey].transporter);
